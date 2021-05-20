@@ -1,4 +1,6 @@
 import * as PIXI from "pixi.js";
+// @ts-ignore
+import * as Queue from "tiny-queue";
 
 const app = new PIXI.Application();
 
@@ -29,12 +31,11 @@ app.ticker.add(delta => run(delta));
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
 
-let commands: (() => void)[] = [];
-
+let queue : Queue<(() => void)> = new Queue();
 function run(delta: number) {
     console.log();
     let command: (() => void) | undefined = undefined;
-    while ((command = commands.pop())) {
+    while ((command = queue.shift())) {
         command();
     }
 
@@ -54,16 +55,16 @@ function keyDownHandler(e: KeyboardEvent) {
     if ("code" in e) {
         switch (e.code) {
             case "ArrowUp":
-                commands.push(() => setBoxUpVelocity(1));
+                queue.push(() => setBoxUpVelocity(10));
                 return;
             case "ArrowDown":
-                commands.push(() => setBoxDownVelocity(1));
+                queue.push(() => setBoxDownVelocity(10));
                 return;
             case "ArrowLeft":
-                commands.push(() => setBoxLeftVelocity(1));
+                queue.push(() => setBoxLeftVelocity(10));
                 return;
             case "ArrowRight":
-                commands.push(() => setBoxRightVelocity(1));
+                queue.push(() => setBoxRightVelocity(10));
                 return;
             default:
                 return;
@@ -75,16 +76,16 @@ function keyUpHandler(e: KeyboardEvent) {
     if ("code" in e) {
         switch (e.code) {
             case "ArrowUp":
-                commands.push(() => setBoxUpVelocity(0));
+                queue.push(() => setBoxUpVelocity(0));
                 return;
             case "ArrowDown":
-                commands.push(() => setBoxDownVelocity(0));
+                queue.push(() => setBoxDownVelocity(0));
                 return;
             case "ArrowLeft":
-                commands.push(() => setBoxLeftVelocity(0));
+                queue.push(() => setBoxLeftVelocity(0));
                 return;
             case "ArrowRight":
-                commands.push(() => setBoxRightVelocity(0));
+                queue.push(() => setBoxRightVelocity(0));
                 return;
             default:
                 return;

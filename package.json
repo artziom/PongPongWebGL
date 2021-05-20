@@ -19,6 +19,7 @@
     "webpack-cli": "^4.7.0"
   },
   "dependencies": {
-    "pixi.js": "^6.0.4"
+    "pixi.js": "^6.0.4",
+    "tiny-queue": "^0.2.1"
   }
 }
