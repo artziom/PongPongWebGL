@@ -1,7 +1,9 @@
 import * as PIXI from "pixi.js";
 import Queue from 'tiny-queue';
 
-const app = new PIXI.Application();
+const app = new PIXI.Application({
+    antialias: true
+});
 
 document.body.appendChild(app.view);
 
