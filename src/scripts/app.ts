@@ -1,6 +1,5 @@
 import * as PIXI from "pixi.js";
-// @ts-ignore
-import * as Queue from "tiny-queue";
+import Queue from 'tiny-queue';
 
 const app = new PIXI.Application();
 
@@ -38,6 +37,8 @@ function run(delta: number) {
     while ((command = queue.shift())) {
         command();
     }
+    let newQue = queue.slice(0,1);
+    newQue.push(() => {});
 
     // @ts-ignore
     box.y -= box.velocityUp;
