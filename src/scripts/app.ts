@@ -9,7 +9,7 @@ document.body.appendChild(app.view);
 
 const leftRacket = new PIXI.Graphics();
 leftRacket.beginFill(0xFFFFFF);
-leftRacket.drawRect(0, 0, 40, 40);
+leftRacket.drawRect(0, 0, 10, 75);
 leftRacket.endFill();
 
 // leftRacket.pivot.set(0, leftRacket.height / 2);
@@ -26,18 +26,44 @@ leftRacket.velocityRight = 0;
 
 app.stage.addChild(leftRacket);
 
-let box = new PIXI.Graphics();
-box.beginFill(0xFF0000);
-box.drawRect(0, 0, 20, 20);
-box.endFill();
-app.stage.addChild(box);
-box.position.set(70, 100);
+let topBottomWallColor = 0x00FF00;
+let leftRightWallColor = 0xFF0000;
+
+let wallTop = new PIXI.Graphics();
+wallTop.beginFill(topBottomWallColor);
+wallTop.drawRect(0, 0, app.view.width, 5);
+wallTop.endFill();
+wallTop.position.set(0, 0);
+app.stage.addChild(wallTop);
+
+let wallRight = new PIXI.Graphics();
+wallRight.beginFill(leftRightWallColor);
+wallRight.drawRect(0, 0, 5, app.view.height);
+wallRight.endFill();
+wallRight.position.set(app.view.width - wallRight.width, 0);
+app.stage.addChild(wallRight);
+
+let wallBottom = new PIXI.Graphics();
+wallBottom.beginFill(topBottomWallColor);
+wallBottom.drawRect(0, 0, app.view.width, 5);
+wallBottom.endFill();
+wallBottom.position.set(0, app.view.height - wallBottom.height);
+app.stage.addChild(wallBottom);
+
+let wallLeft = new PIXI.Graphics();
+wallLeft.beginFill(leftRightWallColor);
+wallLeft.drawRect(0, 0, 5, app.view.height);
+wallLeft.endFill();
+wallLeft.position.set(0, 0);
+app.stage.addChild(wallLeft);
 
 app.ticker.add(delta => run(delta));
 
 let textStyle = new PIXI.TextStyle();
 textStyle.fill = 0xFFFFFF;
 let collisionChecker = new PIXI.Text("No collision", textStyle);
+collisionChecker.anchor.set(0.5);
+collisionChecker.position.set(app.view.width / 2, app.view.height / 2);
 app.stage.addChild(collisionChecker);
 
 document.addEventListener("keydown", keyDownHandler, false);
@@ -67,42 +93,27 @@ function run(delta: number) {
     // @ts-ignore
     leftRacketAfterMove.x += leftRacket.velocityRight;
 
-    if (collisionTest(leftRacketAfterMove, box)) {
+    if (collisionTest(leftRacketAfterMove, wallTop) || collisionTest(leftRacketAfterMove, wallBottom)) {
         // @ts-ignore
         leftRacket.velocityUp = 0;
         // @ts-ignore
         leftRacket.velocityDown = 0;
-        // @ts-ignore
-        leftRacket.velocityLeft = 0;
-        // @ts-ignore
-        leftRacket.velocityRight = 0;
     }
 
     // @ts-ignore
     leftRacket.y -= leftRacket.velocityUp;
     // @ts-ignore
     leftRacket.y += leftRacket.velocityDown;
-
-    // @ts-ignore
-    leftRacket.x -= leftRacket.velocityLeft;
-    // @ts-ignore
-    leftRacket.x += leftRacket.velocityRight;
 }
 
 function keyDownHandler(e: KeyboardEvent) {
     if ("code" in e) {
         switch (e.code) {
             case "ArrowUp":
-                queue.push(() => setBoxUpVelocity(1));
+                queue.push(() => setBoxUpVelocity(5));
                 return;
             case "ArrowDown":
-                queue.push(() => setBoxDownVelocity(1));
-                return;
-            case "ArrowLeft":
-                queue.push(() => setBoxLeftVelocity(1));
-                return;
-            case "ArrowRight":
-                queue.push(() => setBoxRightVelocity(1));
+                queue.push(() => setBoxDownVelocity(5));
                 return;
             default:
                 return;
@@ -118,12 +129,6 @@ function keyUpHandler(e: KeyboardEvent) {
                 return;
             case "ArrowDown":
                 queue.push(() => setBoxDownVelocity(0));
-                return;
-            case "ArrowLeft":
-                queue.push(() => setBoxLeftVelocity(0));
-                return;
-            case "ArrowRight":
-                queue.push(() => setBoxRightVelocity(0));
                 return;
             default:
                 return;
