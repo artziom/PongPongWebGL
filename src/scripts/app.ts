@@ -7,13 +7,14 @@ const app = new PIXI.Application({
 
 document.body.appendChild(app.view);
 
+const racketSpeed = 5;
 const leftRacket = new PIXI.Graphics();
 leftRacket.beginFill(0xFFFFFF);
 leftRacket.drawRect(0, 0, 10, 75);
 leftRacket.endFill();
 
 leftRacket.x = 30;
-leftRacket.y = 100;
+leftRacket.y = app.view.height / 2 - leftRacket.height / 2;
 // @ts-ignore
 leftRacket.velocityUp = 0;
 // @ts-ignore
@@ -27,7 +28,7 @@ rightRacket.drawRect(0, 0, 10, 75);
 rightRacket.endFill();
 
 rightRacket.x = app.view.width - 30 - rightRacket.width;
-rightRacket.y = 500;
+rightRacket.y = app.view.height / 2 - rightRacket.height / 2;
 // @ts-ignore
 rightRacket.velocityUp = 0;
 // @ts-ignore
@@ -66,25 +67,27 @@ wallLeft.endFill();
 wallLeft.position.set(0, 0);
 app.stage.addChild(wallLeft);
 
+const ballSize = 10;
+const ballSpeed = 5;
 let ball = new PIXI.Graphics();
 ball.beginFill(0xFFFFFF);
-ball.drawRect(0, 0, 10, 10);
+ball.drawRect(0, 0, ballSize, ballSize);
 ball.endFill();
 ball.position.set(app.view.width / 2 - ball.width / 2, app.view.height / 2 - ball.height / 2);
 // @ts-ignore
-ball.velocityX = 5;
+ball.velocityX = ballSpeed;
 // @ts-ignore
-ball.velocityY = 5;
+ball.velocityY = ballSpeed;
 app.stage.addChild(ball);
 
 app.ticker.add(delta => run(delta));
 
 let textStyle = new PIXI.TextStyle();
 textStyle.fill = 0xFFFFFF;
-let collisionChecker = new PIXI.Text("", textStyle);
-collisionChecker.anchor.set(0.5);
-collisionChecker.position.set(app.view.width / 2, 20);
-app.stage.addChild(collisionChecker);
+let text = new PIXI.Text("", textStyle);
+text.anchor.set(0.5);
+text.position.set(app.view.width / 2, 20);
+app.stage.addChild(text);
 
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
@@ -120,7 +123,25 @@ function run(delta: number) {
     // @ts-ignore
     leftRacket.y += leftRacket.velocityDown;
 
-    followBall(ball);
+    followBall();
+
+    let rightRacketAfterMove = {
+        x: rightRacket.x,
+        y: rightRacket.y,
+        width: rightRacket.width,
+        height: rightRacket.height
+    }
+    // @ts-ignore
+    rightRacketAfterMove.y -= rightRacket.velocityUp;
+    // @ts-ignore
+    rightRacketAfterMove.y += rightRacket.velocityDown;
+
+    if (collisionTest(rightRacketAfterMove, wallTop) || collisionTest(rightRacketAfterMove, wallBottom)) {
+        // @ts-ignore
+        rightRacket.velocityUp = 0;
+        // @ts-ignore
+        rightRacket.velocityDown = 0;
+    }
 
     // @ts-ignore
     rightRacket.y -= rightRacket.velocityUp;
@@ -150,7 +171,7 @@ function run(delta: number) {
         ball.velocityX = 0;
         // @ts-ignore
         ball.velocityY = 0;
-        collisionChecker.text = "Game Over!"
+        text.text = "Game Over!"
     }
 
     // @ts-ignore
@@ -163,10 +184,10 @@ function keyDownHandler(e: KeyboardEvent) {
     if ("code" in e) {
         switch (e.code) {
             case "ArrowUp":
-                queue.push(() => setBoxUpVelocity(5));
+                queue.push(() => setBoxUpVelocity(racketSpeed));
                 return;
             case "ArrowDown":
-                queue.push(() => setBoxDownVelocity(5));
+                queue.push(() => setBoxDownVelocity(racketSpeed));
                 return;
             default:
                 return;
@@ -201,19 +222,24 @@ function setBoxDownVelocity(v: number) {
 
 type rect = { x: number, y: number, width: number, height: number };
 
-function followBall(ball : rect){
-
-    if(ball.y > rightRacket.y){
-        console.log(ball.y, rightRacket.y);
-        // @ts-ignore
-        rightRacket.velocityDown = 5;
-        // @ts-ignore
-        rightRacket.velocityUp = 0;
-    }else if(ball.y < rightRacket.y){
+function followBall() {
+    // @ts-ignore
+    if (ball.velocityX < 0 || ball.velocityX === 0) {
         // @ts-ignore
         rightRacket.velocityDown = 0;
         // @ts-ignore
-        rightRacket.velocityUp = 5;
+        rightRacket.velocityUp = 0;
+    }else if (ball.y > rightRacket.y) {
+        console.log(ball.y, rightRacket.y);
+        // @ts-ignore
+        rightRacket.velocityDown = racketSpeed;
+        // @ts-ignore
+        rightRacket.velocityUp = 0;
+    } else if (ball.y < rightRacket.y) {
+        // @ts-ignore
+        rightRacket.velocityDown = 0;
+        // @ts-ignore
+        rightRacket.velocityUp = racketSpeed;
     }
 }
 
