@@ -120,6 +120,13 @@ function run(delta: number) {
     // @ts-ignore
     leftRacket.y += leftRacket.velocityDown;
 
+    followBall(ball);
+
+    // @ts-ignore
+    rightRacket.y -= rightRacket.velocityUp;
+    // @ts-ignore
+    rightRacket.y += rightRacket.velocityDown;
+
     let ballAfterMove = {
         // @ts-ignore
         x: ball.x + ball.velocityX,
@@ -193,6 +200,22 @@ function setBoxDownVelocity(v: number) {
 }
 
 type rect = { x: number, y: number, width: number, height: number };
+
+function followBall(ball : rect){
+
+    if(ball.y > rightRacket.y){
+        console.log(ball.y, rightRacket.y);
+        // @ts-ignore
+        rightRacket.velocityDown = 5;
+        // @ts-ignore
+        rightRacket.velocityUp = 0;
+    }else if(ball.y < rightRacket.y){
+        // @ts-ignore
+        rightRacket.velocityDown = 0;
+        // @ts-ignore
+        rightRacket.velocityUp = 5;
+    }
+}
 
 function collisionTest(a: rect, b: rect): boolean {
     let aX1 = a.x;
