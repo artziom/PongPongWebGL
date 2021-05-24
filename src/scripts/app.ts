@@ -33,26 +33,26 @@ let wallTop = new PIXI.Graphics();
 wallTop.beginFill(topBottomWallColor);
 wallTop.drawRect(0, 0, app.view.width, 5);
 wallTop.endFill();
-wallTop.position.set(0, 0);
+wallTop.position.set(0, - wallTop.height);
 app.stage.addChild(wallTop);
 
 let wallRight = new PIXI.Graphics();
 wallRight.beginFill(leftRightWallColor);
 wallRight.drawRect(0, 0, 5, app.view.height);
 wallRight.endFill();
-wallRight.position.set(app.view.width - wallRight.width, 0);
+wallRight.position.set(app.view.width, 0);
 app.stage.addChild(wallRight);
 
 let wallBottom = new PIXI.Graphics();
 wallBottom.beginFill(topBottomWallColor);
 wallBottom.drawRect(0, 0, app.view.width, 5);
 wallBottom.endFill();
-wallBottom.position.set(0, app.view.height - wallBottom.height);
+wallBottom.position.set(0, app.view.height);
 app.stage.addChild(wallBottom);
 
 let wallLeft = new PIXI.Graphics();
 wallLeft.beginFill(leftRightWallColor);
-wallLeft.drawRect(0, 0, 5, app.view.height);
+wallLeft.drawRect(0, 0, -wallLeft.width, app.view.height);
 wallLeft.endFill();
 wallLeft.position.set(0, 0);
 app.stage.addChild(wallLeft);
@@ -163,14 +163,13 @@ function collisionTest(a: rect, b: rect): boolean {
     let aX2 = a.x + a.width;
     let bX1 = b.x;
     let bX2 = b.x + b.width;
-    // if(aX2 >= bX1 && aX2 <= bX2 || aX1 >= bX1 && aX1 <= bX2){
+
     if (aX1 < bX2 && aX2 > bX1) {
         let aY1 = a.y;
         let aY2 = a.y + a.height;
         let bY1 = b.y;
         let bY2 = b.y + b.height;
 
-        // if(aY2 >= bY1 && aY2 <= bY2 || aY1 >= bY1 && aY1 <= bY2){
         if (aY1 < bY2 && aY2 > bY1) {
             collisionChecker.text = "Collision detected!";
             return true;
