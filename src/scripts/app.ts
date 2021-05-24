@@ -33,7 +33,7 @@ let wallTop = new PIXI.Graphics();
 wallTop.beginFill(topBottomWallColor);
 wallTop.drawRect(0, 0, app.view.width, 5);
 wallTop.endFill();
-wallTop.position.set(0, - wallTop.height);
+wallTop.position.set(0, -wallTop.height);
 app.stage.addChild(wallTop);
 
 let wallRight = new PIXI.Graphics();
@@ -57,13 +57,24 @@ wallLeft.endFill();
 wallLeft.position.set(0, 0);
 app.stage.addChild(wallLeft);
 
+let ball = new PIXI.Graphics();
+ball.beginFill(0xFFFFFF);
+ball.drawRect(0, 0, 10, 10);
+ball.endFill();
+ball.position.set(app.view.width / 2 - ball.width / 2, app.view.height / 2 - ball.height / 2);
+// @ts-ignore
+ball.velocityX = 5;
+// @ts-ignore
+ball.velocityY = 5;
+app.stage.addChild(ball);
+
 app.ticker.add(delta => run(delta));
 
 let textStyle = new PIXI.TextStyle();
 textStyle.fill = 0xFFFFFF;
-let collisionChecker = new PIXI.Text("No collision", textStyle);
+let collisionChecker = new PIXI.Text("", textStyle);
 collisionChecker.anchor.set(0.5);
-collisionChecker.position.set(app.view.width / 2, app.view.height / 2);
+collisionChecker.position.set(app.view.width / 2, 20);
 app.stage.addChild(collisionChecker);
 
 document.addEventListener("keydown", keyDownHandler, false);
@@ -104,6 +115,38 @@ function run(delta: number) {
     leftRacket.y -= leftRacket.velocityUp;
     // @ts-ignore
     leftRacket.y += leftRacket.velocityDown;
+
+    let ballAfterMove = {
+        // @ts-ignore
+        x: ball.x + ball.velocityX,
+        // @ts-ignore
+        y: ball.y + ball.velocityY,
+        width: ball.width,
+        height: ball.height
+    }
+    if(collisionTest(ballAfterMove, wallTop) || collisionTest(ballAfterMove, wallBottom)){
+        // @ts-ignore
+        ball.velocityY *= -1;
+    }
+
+    if(collisionTest(ballAfterMove, leftRacket) || collisionTest(ballAfterMove, wallRight)){
+        // @ts-ignore
+        ball.velocityX *= -1;
+    }
+
+    if(collisionTest(ballAfterMove, wallLeft)){
+        // @ts-ignore
+        ball.velocityX = 0;
+        // @ts-ignore
+        ball.velocityY = 0;
+        collisionChecker.text = "Game Over!"
+    }
+
+
+    // @ts-ignore
+    ball.x += ball.velocityX;
+    // @ts-ignore
+    ball.y += ball.velocityY;
 }
 
 function keyDownHandler(e: KeyboardEvent) {
@@ -171,10 +214,9 @@ function collisionTest(a: rect, b: rect): boolean {
         let bY2 = b.y + b.height;
 
         if (aY1 < bY2 && aY2 > bY1) {
-            collisionChecker.text = "Collision detected!";
             return true;
         }
     }
-    collisionChecker.text = "No collision!";
+
     return false;
 }
