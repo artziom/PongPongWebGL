@@ -12,19 +12,28 @@ leftRacket.beginFill(0xFFFFFF);
 leftRacket.drawRect(0, 0, 10, 75);
 leftRacket.endFill();
 
-// leftRacket.pivot.set(0, leftRacket.height / 2);
 leftRacket.x = 30;
 leftRacket.y = 100;
 // @ts-ignore
 leftRacket.velocityUp = 0;
 // @ts-ignore
 leftRacket.velocityDown = 0;
-// @ts-ignore
-leftRacket.velocityLeft = 0;
-// @ts-ignore
-leftRacket.velocityRight = 0;
 
 app.stage.addChild(leftRacket);
+
+const rightRacket = new PIXI.Graphics();
+rightRacket.beginFill(0xFFFFFF);
+rightRacket.drawRect(0, 0, 10, 75);
+rightRacket.endFill();
+
+rightRacket.x = app.view.width - 30 - rightRacket.width;
+rightRacket.y = 500;
+// @ts-ignore
+rightRacket.velocityUp = 0;
+// @ts-ignore
+rightRacket.velocityDown = 0;
+
+app.stage.addChild(rightRacket);
 
 let topBottomWallColor = 0x00FF00;
 let leftRightWallColor = 0xFF0000;
@@ -99,11 +108,6 @@ function run(delta: number) {
     // @ts-ignore
     leftRacketAfterMove.y += leftRacket.velocityDown;
 
-    // @ts-ignore
-    leftRacketAfterMove.x -= leftRacket.velocityLeft;
-    // @ts-ignore
-    leftRacketAfterMove.x += leftRacket.velocityRight;
-
     if (collisionTest(leftRacketAfterMove, wallTop) || collisionTest(leftRacketAfterMove, wallBottom)) {
         // @ts-ignore
         leftRacket.velocityUp = 0;
@@ -124,24 +128,23 @@ function run(delta: number) {
         width: ball.width,
         height: ball.height
     }
-    if(collisionTest(ballAfterMove, wallTop) || collisionTest(ballAfterMove, wallBottom)){
+    if (collisionTest(ballAfterMove, wallTop) || collisionTest(ballAfterMove, wallBottom)) {
         // @ts-ignore
         ball.velocityY *= -1;
     }
 
-    if(collisionTest(ballAfterMove, leftRacket) || collisionTest(ballAfterMove, wallRight)){
+    if (collisionTest(ballAfterMove, leftRacket) || collisionTest(ballAfterMove, rightRacket)) {
         // @ts-ignore
         ball.velocityX *= -1;
     }
 
-    if(collisionTest(ballAfterMove, wallLeft)){
+    if (collisionTest(ballAfterMove, wallLeft) || collisionTest(ballAfterMove, wallRight)) {
         // @ts-ignore
         ball.velocityX = 0;
         // @ts-ignore
         ball.velocityY = 0;
         collisionChecker.text = "Game Over!"
     }
-
 
     // @ts-ignore
     ball.x += ball.velocityX;
@@ -187,16 +190,6 @@ function setBoxUpVelocity(v: number) {
 function setBoxDownVelocity(v: number) {
     // @ts-ignore
     leftRacket.velocityDown = v;
-}
-
-function setBoxLeftVelocity(v: number) {
-    // @ts-ignore
-    leftRacket.velocityLeft = v;
-}
-
-function setBoxRightVelocity(v: number) {
-    // @ts-ignore
-    leftRacket.velocityRight = v;
 }
 
 type rect = { x: number, y: number, width: number, height: number };
