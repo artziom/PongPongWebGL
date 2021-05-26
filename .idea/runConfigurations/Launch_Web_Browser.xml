@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Launch Web Browser" type="JavascriptDebugType" uri="http://localhost:63342/pong-pong-webgl/dist/index.html" useFirstLineBreakpoints="true" useBuiltInWebServerPort="true">
+  <configuration default="false" name="Launch Web Browser" type="JavascriptDebugType" uri="http://localhost:53971/pong-pong-webgl/dist/index.html" useFirstLineBreakpoints="true" useBuiltInWebServerPort="true">
     <method v="2" />
   </configuration>
 </component>
