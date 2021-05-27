@@ -1,6 +1,7 @@
 import * as PIXI from "pixi.js";
 import {State} from "./State";
 import {TitleState} from "./TitleState";
+import {SplashScreenState} from "./SplashScreenState";
 
 
 export default class Game {
@@ -33,6 +34,7 @@ export default class Game {
     }
 
     private registerStates() {
-        this.stateStack.registerState(TitleState);
+        this.stateStack.registerState("SplashScreen", SplashScreenState);
+        this.stateStack.registerState("Title", TitleState);
     }
 }
