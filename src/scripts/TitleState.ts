@@ -1,8 +1,8 @@
 import * as PIXI from "pixi.js";
 
-import {State, IState} from "./State";
+import {State} from "./State";
 
-export class TitleState implements IState {
+export class TitleState implements State.IState {
     public context: State.Context;
 
     public title: PIXI.Text;
