@@ -1,12 +1,15 @@
 import * as PIXI from "pixi.js";
-import State from "./State";
+import {State, IState, StateStack} from "./State";
+import {TitleState} from "./TitleState";
+
 
 export default class Game {
     private readonly title: string;
     private readonly version: string;
 
     private readonly app: PIXI.Application;
-    private state: State;
+    private state: IState;
+    private stateStack: StateStack;
 
     constructor(title: string, version: string) {
         this.title = title;
@@ -18,7 +21,8 @@ export default class Game {
         });
         document.body.appendChild(this.app.view);
 
-        this.state = new State(this.app);
+        this.stateStack = new StateStack(new State.Context(this.app));
+        this.registerStates();
     }
 
     public run() {
@@ -26,6 +30,10 @@ export default class Game {
     }
 
     private update(delta: number) {
-        this.state.update(delta);
+        this.stateStack.update(delta);
+    }
+
+    private registerStates() {
+        this.stateStack.registerState(TitleState);
     }
 }

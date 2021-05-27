@@ -1,45 +1,50 @@
 import * as PIXI from "pixi.js";
 
-export default class State {
-    public showText: boolean;
-    public titleString: string;
-    public textEffectTime: number;
+export interface IState {
+    readonly context: State.Context;
 
-    public title: PIXI.Text;
-    private stage: PIXI.Container;
-    private app: PIXI.Application;
+    update: (delta: number) => void;
+}
 
-    constructor(app: PIXI.Application) {
-        this.app = app;
-        this.stage = this.app.stage;
+interface StateConstructor {
+    new(state: State.Context): IState;
+}
 
-        this.showText = true;
-        this.titleString = "Pong Pong\nPress [space] to start game";
-        this.textEffectTime = 0;
+export namespace State {
+    export function createState(state: StateConstructor, context: State.Context): IState {
+        return new state(context);
+    }
 
-        const style = new PIXI.TextStyle({
-            fill: 0xFFFFFF,
-            align: "center"
-        });
-        this.title = new PIXI.Text(this.titleString, style);
-        this.title.position.set(this.app.screen.width / 2, this.app.screen.height / 2);
-        this.title.anchor.set(0.5);
+    export class Context {
+        private readonly app: PIXI.Application;
 
-        this.stage.addChild(this.title);
+        constructor(app: PIXI.Application) {
+            this.app = app;
+        }
+
+        public getApp(): PIXI.Application {
+            return this.app;
+        }
+
+        public getStage(): PIXI.Container {
+            return this.app.stage;
+        }
+    }
+}
+
+export class StateStack {
+    private readonly context: State.Context;
+    private state: IState;
+
+    constructor(context: State.Context) {
+        this.context = context;
+    }
+
+    public registerState(state: StateConstructor) {
+        this.state = State.createState(state, this.context);
     }
 
     public update(delta: number) {
-        this.textEffectTime += delta;
-
-        if (this.textEffectTime >= 60) {
-            this.showText = !this.showText;
-
-            if (this.showText) {
-                this.title.visible = true;
-            } else {
-                this.title.visible = false;
-            }
-            this.textEffectTime = 0;
-        }
+        this.state.update(delta);
     }
 }
