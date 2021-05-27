@@ -1,4 +1,4 @@
 import Game from "./Game";
-
-const game = new Game("Pong Pong", "0.0.1");
+import {version} from "./version";
+const game = new Game("Pong Pong", version);
 game.run();
