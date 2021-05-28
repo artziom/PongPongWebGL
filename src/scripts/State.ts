@@ -53,6 +53,10 @@ export namespace State {
             this.states.pop();
         }
 
+        public isEmpty() {
+            return this.states.length === 0;
+        }
+
         public registerState(stateId: string, state: StateConstructor) {
             this.stateFactories.set(stateId, () => {
                 return State.createState(state, this.context);
