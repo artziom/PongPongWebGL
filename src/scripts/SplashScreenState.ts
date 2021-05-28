@@ -21,6 +21,7 @@ export class SplashScreenState implements State.IState {
         this.context.getStage().addChild(this.title);
     }
 
-    update(delta: number): void {
+    update(delta: number): boolean {
+        return false
     }
 }

@@ -36,5 +36,7 @@ export default class Game {
     private registerStates() {
         this.stateStack.registerState("SplashScreen", SplashScreenState);
         this.stateStack.registerState("Title", TitleState);
+
+        this.stateStack.push("SplashScreen");
     }
 }

@@ -1,11 +1,10 @@
 import * as PIXI from "pixi.js";
-import Queue from "tiny-queue";
 
 export namespace State {
     export interface IState {
         readonly context: State.Context;
 
-        update: (delta: number) => void;
+        update: (delta: number) => boolean;
     }
 
     interface StateConstructor {
@@ -34,29 +33,34 @@ export namespace State {
 
     export class StateStack {
         private readonly context: State.Context;
-        private states: Queue<State.IState>;
-        private statesFactories: Map<string, (state: StateConstructor) => IState>;
-        private state: State.IState;
+        private readonly stateStack: Array<State.IState>;
+        private readonly stateFactories: Map<string, () => IState>;
 
         constructor(context: State.Context) {
             this.context = context;
+            this.stateStack = new Array<State.IState>();
+            this.stateFactories = new Map<string, () => State.IState>();
         }
 
-        public push(stateId: string){
-            if(this.statesFactories.get(stateId) !== undefined){
-                this.state = this.statesFactories.get(stateId)();
+        public push(stateId: string) {
+            const stateConstructor = this.stateFactories.get(stateId);
+            if (stateConstructor !== undefined) {
+                this.stateStack.push(stateConstructor());
             }
-
         }
 
         public registerState(stateId: string, state: StateConstructor) {
-            this.statesFactories.set(stateId, (state) => {
+            this.stateFactories.set(stateId, () => {
                 return State.createState(state, this.context);
             });
         }
 
         public update(delta: number) {
-            this.state.update(delta);
+            for (let state of this.stateStack) {
+                if (state.update(delta)) {
+                    break;
+                }
+            }
         }
     }
 }

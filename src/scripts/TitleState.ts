@@ -28,7 +28,7 @@ export class TitleState implements State.IState {
         this.context.getStage().addChild(this.title);
     }
 
-    public update(delta: number) {
+    public update(delta: number): boolean {
         this.textEffectTime += delta;
 
         if (this.textEffectTime >= 60) {
@@ -41,5 +41,7 @@ export class TitleState implements State.IState {
             }
             this.textEffectTime = 0;
         }
+
+        return false;
     }
 }
