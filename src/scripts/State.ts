@@ -56,8 +56,9 @@ export namespace State {
         }
 
         public update(delta: number) {
+            // Iterate from first to last, stop as soon as update() returns false
             for (let state of this.stateStack) {
-                if (state.update(delta)) {
+                if (!state.update(delta)) {
                     break;
                 }
             }

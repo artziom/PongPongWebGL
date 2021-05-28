@@ -22,6 +22,6 @@ export class SplashScreenState implements State.IState {
     }
 
     update(delta: number): boolean {
-        return false
+        return false;
     }
 }
