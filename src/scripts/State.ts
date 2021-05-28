@@ -33,20 +33,24 @@ export namespace State {
 
     export class StateStack {
         private readonly context: State.Context;
-        private readonly stateStack: Array<State.IState>;
+        private readonly states: Array<State.IState>;
         private readonly stateFactories: Map<string, () => IState>;
 
         constructor(context: State.Context) {
             this.context = context;
-            this.stateStack = new Array<State.IState>();
+            this.states = new Array<State.IState>();
             this.stateFactories = new Map<string, () => State.IState>();
         }
 
         public push(stateId: string) {
             const stateConstructor = this.stateFactories.get(stateId);
             if (stateConstructor !== undefined) {
-                this.stateStack.push(stateConstructor());
+                this.states.push(stateConstructor());
             }
+        }
+
+        public pop() {
+            this.states.pop();
         }
 
         public registerState(stateId: string, state: StateConstructor) {
@@ -57,7 +61,7 @@ export namespace State {
 
         public update(delta: number) {
             // Iterate from first to last, stop as soon as update() returns false
-            for (let state of this.stateStack) {
+            for (let state of this.states) {
                 if (!state.update(delta)) {
                     break;
                 }
