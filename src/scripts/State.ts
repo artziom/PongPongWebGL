@@ -3,16 +3,17 @@ import * as PIXI from "pixi.js";
 export namespace State {
     export interface IState {
         readonly context: State.Context;
+        readonly stack: StateStack;
 
         update: (delta: number) => boolean;
     }
 
     interface StateConstructor {
-        new(state: State.Context): IState;
+        new(stack: StateStack, context: State.Context): IState;
     }
 
-    export function createState(state: StateConstructor, context: State.Context): IState {
-        return new state(context);
+    export function createState(state: StateConstructor, stack: StateStack, context: State.Context): IState {
+        return new state(stack, context);
     }
 
     export class Context {
@@ -59,7 +60,7 @@ export namespace State {
 
         public registerState(stateId: string, state: StateConstructor) {
             this.stateFactories.set(stateId, () => {
-                return State.createState(state, this.context);
+                return State.createState(state, this, this.context);
             });
         }
 

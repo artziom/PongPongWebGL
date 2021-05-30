@@ -3,11 +3,15 @@ import * as PIXI from "pixi.js";
 import {State} from "./State";
 
 export class SplashScreenState implements State.IState {
+    readonly stack: State.StateStack;
     public context: State.Context;
 
     public title: PIXI.Text;
+    private time: number;
 
-    constructor(context: State.Context) {
+    constructor(stack: State.StateStack, context: State.Context) {
+        this.time = 0;
+        this.stack = stack;
         this.context = context;
 
         const style = new PIXI.TextStyle({
@@ -22,6 +26,11 @@ export class SplashScreenState implements State.IState {
     }
 
     update(delta: number): boolean {
+        this.time += delta;
+        if (this.time > 60) {
+            this.stack.pop();
+            this.stack.push("Title");
+        }
         return false;
     }
 }

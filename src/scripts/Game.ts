@@ -38,8 +38,5 @@ export default class Game {
         this.stateStack.registerState("Title", TitleState);
 
         this.stateStack.push("SplashScreen");
-        this.stateStack.push("Title");
-
-        this.stateStack.pop();
     }
 }

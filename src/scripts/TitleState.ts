@@ -3,6 +3,7 @@ import * as PIXI from "pixi.js";
 import {State} from "./State";
 
 export class TitleState implements State.IState {
+    readonly stack: State.StateStack;
     public context: State.Context;
 
     public title: PIXI.Text;
@@ -10,7 +11,8 @@ export class TitleState implements State.IState {
     public titleString: string;
     public textEffectTime: number;
 
-    constructor(context: State.Context) {
+    constructor(stack: State.StateStack, context: State.Context) {
+        this.stack = stack;
         this.context = context;
 
         this.showText = true;
