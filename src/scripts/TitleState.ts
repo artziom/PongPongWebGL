@@ -27,9 +27,9 @@ export class TitleState extends State.IState {
     }
 
     public update(delta: number): boolean {
-        this.textEffectTime += delta;
+        this.textEffectTime += this.getApp().ticker.elapsedMS;
 
-        if (this.textEffectTime >= 60) {
+        if (this.textEffectTime >= 1000) {
             this.showText = !this.showText;
 
             if (this.showText) {
