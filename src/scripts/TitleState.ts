@@ -20,10 +20,10 @@ export class TitleState extends State.IState {
             align: "center"
         });
         this.title = new PIXI.Text(this.titleString, style);
-        this.title.position.set(this.getContext().getApp().screen.width / 2, this.getContext().getApp().screen.height / 2);
+        this.title.position.set(this.getApp().screen.width / 2, this.getApp().screen.height / 2);
         this.title.anchor.set(0.5);
 
-        this.getContext().getStage().addChild(this.title);
+        this.getStage().addChild(this.title);
     }
 
     public update(delta: number): boolean {

@@ -10,12 +10,18 @@ export namespace State {
             this.stack = stack;
             this.context = context;
             this.stateStage = new PIXI.Container();
+
+            this.context.getStage().addChild(this.stateStage);
         }
 
         public abstract update(delta: number): boolean;
 
-        protected getContext(): Context {
-            return this.context;
+        protected getApp(): PIXI.Application {
+            return this.context.getApp();
+        }
+
+        protected getStage(): PIXI.Container {
+            return this.stateStage;
         }
 
         protected requestStackPush(stateId: string) {
@@ -23,6 +29,7 @@ export namespace State {
         }
 
         protected requestStackPop() {
+            this.stateStage.destroy();
             this.stack.pop();
         }
     }
