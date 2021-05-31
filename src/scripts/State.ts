@@ -1,11 +1,30 @@
 import * as PIXI from "pixi.js";
 
 export namespace State {
-    export interface IState {
-        readonly context: State.Context;
-        readonly stack: StateStack;
+    export abstract class IState {
+        private readonly stateStage: PIXI.Container;
+        private readonly context: State.Context;
+        private readonly stack: StateStack;
 
-        update: (delta: number) => boolean;
+        protected constructor(stack: State.StateStack, context: State.Context) {
+            this.stack = stack;
+            this.context = context;
+            this.stateStage = new PIXI.Container();
+        }
+
+        public abstract update(delta: number): boolean;
+
+        protected getContext(): Context {
+            return this.context;
+        }
+
+        protected requestStackPush(stateId: string) {
+            this.stack.push(stateId);
+        }
+
+        protected requestStackPop() {
+            this.stack.pop();
+        }
     }
 
     interface StateConstructor {

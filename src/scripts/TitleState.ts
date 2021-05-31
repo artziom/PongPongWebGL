@@ -2,18 +2,14 @@ import * as PIXI from "pixi.js";
 
 import {State} from "./State";
 
-export class TitleState implements State.IState {
-    readonly stack: State.StateStack;
-    public context: State.Context;
-
+export class TitleState extends State.IState {
     public title: PIXI.Text;
     public showText: boolean;
     public titleString: string;
     public textEffectTime: number;
 
     constructor(stack: State.StateStack, context: State.Context) {
-        this.stack = stack;
-        this.context = context;
+        super(stack, context);
 
         this.showText = true;
         this.titleString = "Pong Pong\nPress [space] to start game";
@@ -24,10 +20,10 @@ export class TitleState implements State.IState {
             align: "center"
         });
         this.title = new PIXI.Text(this.titleString, style);
-        this.title.position.set(this.context.getApp().screen.width / 2, this.context.getApp().screen.height / 2);
+        this.title.position.set(this.getContext().getApp().screen.width / 2, this.getContext().getApp().screen.height / 2);
         this.title.anchor.set(0.5);
 
-        this.context.getStage().addChild(this.title);
+        this.getContext().getStage().addChild(this.title);
     }
 
     public update(delta: number): boolean {
