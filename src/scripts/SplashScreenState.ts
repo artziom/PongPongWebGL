@@ -1,6 +1,7 @@
 import * as PIXI from "pixi.js";
 
 import {State} from "./State";
+import {States} from "./StatesIdentifiers";
 
 export class SplashScreenState extends State.IState {
     public title: PIXI.Text;
@@ -25,7 +26,7 @@ export class SplashScreenState extends State.IState {
         this.time += delta;
         if (this.time > 180) {
             this.requestStackPop();
-            this.requestStackPush("Title");
+            this.requestStackPush(States.ID.Title);
         }
         return false;
     }

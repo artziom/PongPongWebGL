@@ -25,8 +25,8 @@ export namespace State {
             return this.stateStage;
         }
 
-        protected requestStackPush(stateId: States.ID) {
-            this.stack.push(stateId);
+        protected requestStackPush(stateID: States.ID) {
+            this.stack.push(stateID);
         }
 
         protected requestStackPop() {
@@ -70,8 +70,8 @@ export namespace State {
             this.stateFactories = new Map<States.ID, () => State.IState>();
         }
 
-        public push(stateId: States.ID) {
-            const stateConstructor = this.stateFactories.get(stateId);
+        public push(stateID: States.ID) {
+            const stateConstructor = this.stateFactories.get(stateID);
             if (stateConstructor !== undefined) {
                 this.states.push(stateConstructor());
             }
@@ -85,8 +85,8 @@ export namespace State {
             return this.states.length === 0;
         }
 
-        public registerState(stateId: States.ID, state: StateConstructor) {
-            this.stateFactories.set(stateId, () => {
+        public registerState(stateID: States.ID, state: StateConstructor) {
+            this.stateFactories.set(stateID, () => {
                 return State.createState(state, this, this.context);
             });
         }
