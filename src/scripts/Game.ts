@@ -4,13 +4,14 @@ import {TitleState} from "./TitleState";
 import {SplashScreenState} from "./SplashScreenState";
 import {GameState} from "./GameState";
 import {States} from "./StatesIdentifiers";
+import {StateStack} from "./StateStack";
 
 export default class Game {
     private readonly title: string;
     private readonly version: string;
 
     private readonly app: PIXI.Application;
-    private stateStack: State.StateStack;
+    private stateStack: StateStack;
 
     constructor(title: string, version: string) {
         this.title = title;
@@ -22,7 +23,7 @@ export default class Game {
         });
         document.body.appendChild(this.app.view);
 
-        this.stateStack = new State.StateStack(new State.Context(this.app));
+        this.stateStack = new StateStack(new State.Context(this.app));
         this.registerStates();
     }
 

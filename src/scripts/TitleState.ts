@@ -1,6 +1,7 @@
 import * as PIXI from "pixi.js";
 
 import {State} from "./State";
+import {StateStack} from "./StateStack";
 
 export class TitleState extends State.IState {
     public title: PIXI.Text;
@@ -8,7 +9,7 @@ export class TitleState extends State.IState {
     public titleString: string;
     public textEffectTime: number;
 
-    constructor(stack: State.StateStack, context: State.Context) {
+    constructor(stack: StateStack, context: State.Context) {
         super(stack, context);
 
         this.showText = true;

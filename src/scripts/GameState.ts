@@ -1,10 +1,11 @@
 import * as PIXI from "pixi.js";
 
 import {State} from "./State";
+import {StateStack} from "./StateStack";
 
 export class GameState extends State.IState {
 
-    constructor(stack: State.StateStack, context: State.Context) {
+    constructor(stack: StateStack, context: State.Context) {
         super(stack, context);
 
         let ball = new PIXI.Graphics();

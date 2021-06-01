@@ -2,12 +2,13 @@ import * as PIXI from "pixi.js";
 
 import {State} from "./State";
 import {States} from "./StatesIdentifiers";
+import {StateStack} from "./StateStack";
 
 export class SplashScreenState extends State.IState {
     public title: PIXI.Text;
     private time: number;
 
-    constructor(stack: State.StateStack, context: State.Context) {
+    constructor(stack: StateStack, context: State.Context) {
         super(stack, context);
         this.time = 0;
 
