@@ -3,13 +3,13 @@ import {State} from "./State";
 
 export class StateStack {
     private readonly context: State.Context;
-    private readonly states: Array<State.IState>;
-    private readonly stateFactories: Map<States.ID, () => State.IState>;
+    private readonly states: Array<State.AbstractState>;
+    private readonly stateFactories: Map<States.ID, () => State.AbstractState>;
 
     constructor(context: State.Context) {
         this.context = context;
-        this.states = new Array<State.IState>();
-        this.stateFactories = new Map<States.ID, () => State.IState>();
+        this.states = new Array<State.AbstractState>();
+        this.stateFactories = new Map<States.ID, () => State.AbstractState>();
     }
 
     public push(stateID: States.ID) {
@@ -29,7 +29,7 @@ export class StateStack {
 
     public registerState(stateID: States.ID, state: State.StateConstructor) {
         this.stateFactories.set(stateID, () => {
-            return State.createState(state, this, this.context);
+            return State.AbstractState.createState(state, this, this.context);
         });
     }
 

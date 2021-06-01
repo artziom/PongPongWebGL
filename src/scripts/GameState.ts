@@ -1,10 +1,8 @@
 import * as PIXI from "pixi.js";
-
 import {State} from "./State";
 import {StateStack} from "./StateStack";
 
-export class GameState extends State.IState {
-
+export class GameState extends State.AbstractState {
     constructor(stack: StateStack, context: State.Context) {
         super(stack, context);
 

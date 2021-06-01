@@ -3,7 +3,7 @@ import * as PIXI from "pixi.js";
 import {State} from "./State";
 import {StateStack} from "./StateStack";
 
-export class TitleState extends State.IState {
+export class TitleState extends State.AbstractState {
     public title: PIXI.Text;
     public showText: boolean;
     public titleString: string;

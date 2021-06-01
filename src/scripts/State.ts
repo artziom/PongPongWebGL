@@ -1,9 +1,13 @@
 import * as PIXI from "pixi.js";
-import {States} from "./StatesIdentifiers";
 import {StateStack} from "./StateStack";
+import {States} from "./StatesIdentifiers";
 
 export namespace State {
-    export abstract class IState {
+    export interface StateConstructor {
+        new(stack: StateStack, context: State.Context): AbstractState;
+    }
+
+    export abstract class AbstractState {
         private readonly stateStage: PIXI.Container;
         private readonly context: State.Context;
         private readonly stack: StateStack;
@@ -34,14 +38,10 @@ export namespace State {
             this.stateStage.destroy();
             this.stack.pop();
         }
-    }
 
-    export interface StateConstructor {
-        new(stack: StateStack, context: State.Context): IState;
-    }
-
-    export function createState(state: StateConstructor, stack: StateStack, context: State.Context): IState {
-        return new state(stack, context);
+        public static createState(state: StateConstructor, stack: StateStack, context: State.Context): AbstractState {
+            return new state(stack, context);
+        }
     }
 
     export class Context {

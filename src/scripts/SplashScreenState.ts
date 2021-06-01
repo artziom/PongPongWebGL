@@ -4,7 +4,7 @@ import {State} from "./State";
 import {States} from "./StatesIdentifiers";
 import {StateStack} from "./StateStack";
 
-export class SplashScreenState extends State.IState {
+export class SplashScreenState extends State.AbstractState {
     public title: PIXI.Text;
     private time: number;
 
