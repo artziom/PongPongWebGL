@@ -3,7 +3,7 @@ import {State} from "./State";
 import {TitleState} from "./TitleState";
 import {SplashScreenState} from "./SplashScreenState";
 import {GameState} from "./GameState";
-
+import {States} from "./StatesIdentifiers";
 
 export default class Game {
     private readonly title: string;
@@ -35,10 +35,10 @@ export default class Game {
     }
 
     private registerStates() {
-        this.stateStack.registerState("SplashScreen", SplashScreenState);
-        this.stateStack.registerState("Title", TitleState);
-        this.stateStack.registerState("Game", GameState);
+        this.stateStack.registerState(States.ID.SplashScreen, SplashScreenState);
+        this.stateStack.registerState(States.ID.Title, TitleState);
+        this.stateStack.registerState(States.ID.Game, GameState);
 
-        this.stateStack.push("SplashScreen");
+        this.stateStack.push(States.ID.SplashScreen);
     }
 }

@@ -1,4 +1,5 @@
 import * as PIXI from "pixi.js";
+import {States} from "./StatesIdentifiers";
 
 export namespace State {
     export abstract class IState {
@@ -24,7 +25,7 @@ export namespace State {
             return this.stateStage;
         }
 
-        protected requestStackPush(stateId: string) {
+        protected requestStackPush(stateId: States.ID) {
             this.stack.push(stateId);
         }
 
@@ -61,15 +62,15 @@ export namespace State {
     export class StateStack {
         private readonly context: State.Context;
         private readonly states: Array<State.IState>;
-        private readonly stateFactories: Map<string, () => IState>;
+        private readonly stateFactories: Map<States.ID, () => IState>;
 
         constructor(context: State.Context) {
             this.context = context;
             this.states = new Array<State.IState>();
-            this.stateFactories = new Map<string, () => State.IState>();
+            this.stateFactories = new Map<States.ID, () => State.IState>();
         }
 
-        public push(stateId: string) {
+        public push(stateId: States.ID) {
             const stateConstructor = this.stateFactories.get(stateId);
             if (stateConstructor !== undefined) {
                 this.states.push(stateConstructor());
@@ -84,7 +85,7 @@ export namespace State {
             return this.states.length === 0;
         }
 
-        public registerState(stateId: string, state: StateConstructor) {
+        public registerState(stateId: States.ID, state: StateConstructor) {
             this.stateFactories.set(stateId, () => {
                 return State.createState(state, this, this.context);
             });
