@@ -1,30 +1,43 @@
 import * as PIXI from "pixi.js";
-
 import {State} from "./State";
 import {StateStack} from "./StateStack";
+import {States} from "./StatesIdentifiers";
 
 export class TitleState extends State.AbstractState {
-    public title: PIXI.Text;
+    public gameTitle: PIXI.Text;
+    public pressAnyKey: PIXI.Text;
     public showText: boolean;
-    public titleString: string;
     public textEffectTime: number;
 
     constructor(stack: StateStack, context: State.Context) {
         super(stack, context);
 
-        this.showText = true;
-        this.titleString = "Pong Pong\nPress [space] to start game";
-        this.textEffectTime = 0;
-
-        const style = new PIXI.TextStyle({
+        const gameTitleStyle = new PIXI.TextStyle({
+            fontSize: 48,
             fill: 0xFFFFFF,
             align: "center"
         });
-        this.title = new PIXI.Text(this.titleString, style);
-        this.title.position.set(this.getApp().screen.width / 2, this.getApp().screen.height / 2);
-        this.title.anchor.set(0.5);
+        this.gameTitle = new PIXI.Text("Pong Pong", gameTitleStyle);
+        this.gameTitle.position.set(this.getApp().screen.width / 2, this.getApp().screen.height / 2);
+        this.gameTitle.anchor.set(0.5);
+        this.getStage().addChild(this.gameTitle);
 
-        this.getStage().addChild(this.title);
+        const pressAnyKeyStyle = new PIXI.TextStyle({
+            fontSize: 20,
+            fill: 0xFFFFFF,
+            align: "center"
+        });
+        this.showText = true;
+        this.textEffectTime = 0;
+        this.pressAnyKey = new PIXI.Text("Press Any Key", pressAnyKeyStyle);
+        this.pressAnyKey.position.set(this.getApp().screen.width / 2, this.getApp().screen.height / 2 + 100);
+        this.pressAnyKey.anchor.set(0.5);
+        this.getStage().addChild(this.pressAnyKey);
+
+        document.onkeydown = () => {
+            this.requestStackPop();
+            this.requestStackPush(States.ID.Game);
+        };
     }
 
     public update(delta: number): boolean {
@@ -34,9 +47,9 @@ export class TitleState extends State.AbstractState {
             this.showText = !this.showText;
 
             if (this.showText) {
-                this.title.visible = true;
+                this.pressAnyKey.visible = true;
             } else {
-                this.title.visible = false;
+                this.pressAnyKey.visible = false;
             }
             this.textEffectTime = 0;
         }
