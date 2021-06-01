@@ -12,7 +12,7 @@ export class GameState extends State.AbstractState {
         ball.endFill();
         ball.position.set(this.getApp().view.width / 2 - ball.width / 2, this.getApp().view.height / 2 - ball.height / 2);
 
-        this.getStage().addChild(ball);
+        this.addChildToStage(ball);
     }
 
     public update(delta: number): boolean {

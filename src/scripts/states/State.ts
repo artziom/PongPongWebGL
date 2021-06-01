@@ -20,6 +20,10 @@ export namespace State {
             this.context.getStage().addChild(this.stateStage);
         }
 
+        public static createState(state: StateConstructor, stack: StateStack, context: State.Context): AbstractState {
+            return new state(stack, context);
+        }
+
         public abstract update(delta: number): boolean;
 
         protected getApp(): PIXI.Application {
@@ -30,6 +34,10 @@ export namespace State {
             return this.stateStage;
         }
 
+        protected addChildToStage<T extends PIXI.DisplayObject[]>(...children: T): T[0] {
+            return this.stateStage.addChild(...children);
+        }
+
         protected requestStackPush(stateID: States.ID) {
             this.stack.push(stateID);
         }
@@ -37,10 +45,6 @@ export namespace State {
         protected requestStackPop() {
             this.stateStage.destroy();
             this.stack.pop();
-        }
-
-        public static createState(state: StateConstructor, stack: StateStack, context: State.Context): AbstractState {
-            return new state(stack, context);
         }
     }
 

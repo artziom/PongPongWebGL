@@ -20,7 +20,7 @@ export class TitleState extends State.AbstractState {
         this.gameTitle = new PIXI.Text("Pong Pong", gameTitleStyle);
         this.gameTitle.position.set(this.getApp().screen.width / 2, this.getApp().screen.height / 2);
         this.gameTitle.anchor.set(0.5);
-        this.getStage().addChild(this.gameTitle);
+        this.addChildToStage(this.gameTitle);
 
         const pressAnyKeyStyle = new PIXI.TextStyle({
             fontSize: 20,
@@ -32,7 +32,7 @@ export class TitleState extends State.AbstractState {
         this.pressAnyKey = new PIXI.Text("Press Any Key", pressAnyKeyStyle);
         this.pressAnyKey.position.set(this.getApp().screen.width / 2, this.getApp().screen.height / 2 + 100);
         this.pressAnyKey.anchor.set(0.5);
-        this.getStage().addChild(this.pressAnyKey);
+        this.addChildToStage(this.pressAnyKey);
 
         document.onkeydown = () => {
             this.requestStackPop();

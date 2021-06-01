@@ -20,7 +20,7 @@ export class SplashScreenState extends State.AbstractState {
         this.title.position.set(this.getApp().screen.width / 2, this.getApp().screen.height / 2);
         this.title.anchor.set(0.5);
 
-        this.getStage().addChild(this.title);
+        this.addChildToStage(this.title);
     }
 
     public update(delta: number): boolean {
