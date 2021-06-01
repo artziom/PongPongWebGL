@@ -1,10 +1,10 @@
 import * as PIXI from "pixi.js";
-import {State} from "./State";
-import {TitleState} from "./TitleState";
-import {SplashScreenState} from "./SplashScreenState";
-import {GameState} from "./GameState";
-import {States} from "./StatesIdentifiers";
-import {StateStack} from "./StateStack";
+import {State} from "./states/State";
+import {TitleState} from "./states/TitleState";
+import {SplashScreenState} from "./states/SplashScreenState";
+import {GameState} from "./states/GameState";
+import {States} from "./states/StatesIdentifiers";
+import {StateStack} from "./states/StateStack";
 
 export default class Game {
     private readonly title: string;
