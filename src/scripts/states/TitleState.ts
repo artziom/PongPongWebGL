@@ -34,10 +34,14 @@ export class TitleState extends State.AbstractState {
         this.pressAnyKey.anchor.set(0.5);
         this.addChildToStage(this.pressAnyKey);
 
-        document.onkeydown = () => {
-            this.requestStackPop();
-            this.requestStackPush(States.ID.Game);
-        };
+        document.onkeydown = this.nextState;
+    }
+
+    public nextState: () => void = () => {
+        document.onkeydown = null;
+        console.log("TitleState", "onkeydown", this);
+        this.requestStackPop();
+        this.requestStackPush(States.ID.Game);
     }
 
     public update(delta: number): boolean {
