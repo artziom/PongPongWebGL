@@ -1,5 +1,6 @@
 import {States} from "./StatesIdentifiers";
 import {State} from "./State";
+import {Event} from "../Event";
 
 export class StateStack {
     private readonly context: State.Context;
@@ -10,6 +11,24 @@ export class StateStack {
         this.context = context;
         this.states = new Array<State.AbstractState>();
         this.stateFactories = new Map<States.ID, () => State.AbstractState>();
+    }
+
+    public handleEvent(event: Event.Key) {
+        // Iterate from first to last, stop as soon as update() returns false
+        for (let state of this.states) {
+            if (!state.handleEvent(event)) {
+                break;
+            }
+        }
+    }
+
+    public update(delta: number) {
+        // Iterate from first to last, stop as soon as update() returns false
+        for (let state of this.states) {
+            if (!state.update(delta)) {
+                break;
+            }
+        }
     }
 
     public push(stateID: States.ID) {
@@ -31,14 +50,5 @@ export class StateStack {
         this.stateFactories.set(stateID, () => {
             return State.AbstractState.createState(state, this, this.context);
         });
-    }
-
-    public update(delta: number) {
-        // Iterate from first to last, stop as soon as update() returns false
-        for (let state of this.states) {
-            if (!state.update(delta)) {
-                break;
-            }
-        }
     }
 }

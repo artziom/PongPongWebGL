@@ -5,6 +5,7 @@ import {SplashScreenState} from "./states/SplashScreenState";
 import {GameState} from "./states/GameState";
 import {States} from "./states/StatesIdentifiers";
 import {StateStack} from "./states/StateStack";
+import {Event} from "./Event";
 
 export default class Game {
     private readonly title: string;
@@ -12,6 +13,7 @@ export default class Game {
 
     private readonly app: PIXI.Application;
     private stateStack: StateStack;
+    private events: Array<Event.Key>;
 
     constructor(title: string, version: string) {
         this.title = title;
@@ -25,6 +27,16 @@ export default class Game {
 
         this.stateStack = new StateStack(new State.Context(this.app));
         this.registerStates();
+
+        this.events = [];
+
+        window.onkeydown = (e) => {
+            this.events.push(new Event.Key(Event.Type.KeyPressed, e.code, false, false, false));
+        };
+
+        window.onkeyup = (e) => {
+            this.events.push(new Event.Key(Event.Type.KeyReleased, e.code, false, false, false));
+        };
     }
 
     public run() {
@@ -32,6 +44,11 @@ export default class Game {
     }
 
     private update(delta: number) {
+        let event;
+        while (event = this.popEvent()) {
+            this.stateStack.handleEvent(event);
+        }
+
         this.stateStack.update(delta);
     }
 
@@ -41,5 +58,9 @@ export default class Game {
         this.stateStack.registerState(States.ID.Game, GameState);
 
         this.stateStack.push(States.ID.SplashScreen);
+    }
+
+    private popEvent(): Event.Key | false {
+        return this.events.pop() ?? false;
     }
 }

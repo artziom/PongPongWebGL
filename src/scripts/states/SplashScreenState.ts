@@ -3,6 +3,7 @@ import * as PIXI from "pixi.js";
 import {State} from "./State";
 import {States} from "./StatesIdentifiers";
 import {StateStack} from "./StateStack";
+import {Event} from "../Event";
 
 export class SplashScreenState extends State.AbstractState {
     public title: PIXI.Text;
@@ -30,5 +31,9 @@ export class SplashScreenState extends State.AbstractState {
             this.requestStackPush(States.ID.Title);
         }
         return false;
+    }
+
+    public handleEvent(event: Event.Key): boolean {
+        return true;
     }
 }

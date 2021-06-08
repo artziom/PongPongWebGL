@@ -1,6 +1,7 @@
 import * as PIXI from "pixi.js";
 import {State} from "./State";
 import {StateStack} from "./StateStack";
+import {Event} from "../Event";
 
 export class GameState extends State.AbstractState {
     constructor(stack: StateStack, context: State.Context) {
@@ -17,5 +18,9 @@ export class GameState extends State.AbstractState {
 
     public update(delta: number): boolean {
         return false;
+    }
+
+    public handleEvent(event: Event.Key): boolean {
+        return true;
     }
 }

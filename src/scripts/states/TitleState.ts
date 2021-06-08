@@ -2,6 +2,7 @@ import * as PIXI from "pixi.js";
 import {State} from "./State";
 import {StateStack} from "./StateStack";
 import {States} from "./StatesIdentifiers";
+import {Event} from "../Event";
 
 export class TitleState extends State.AbstractState {
     public gameTitle: PIXI.Text;
@@ -33,15 +34,6 @@ export class TitleState extends State.AbstractState {
         this.pressAnyKey.position.set(this.getApp().screen.width / 2, this.getApp().screen.height / 2 + 100);
         this.pressAnyKey.anchor.set(0.5);
         this.addChildToStage(this.pressAnyKey);
-
-        document.onkeydown = this.nextState;
-    }
-
-    public nextState: () => void = () => {
-        document.onkeydown = null;
-        console.log("TitleState", "onkeydown", this);
-        this.requestStackPop();
-        this.requestStackPush(States.ID.Game);
     }
 
     public update(delta: number): boolean {
@@ -59,5 +51,11 @@ export class TitleState extends State.AbstractState {
         }
 
         return false;
+    }
+
+    public handleEvent(event: Event.Key): boolean {
+        this.requestStackPop();
+        this.requestStackPush(States.ID.Game);
+        return true;
     }
 }

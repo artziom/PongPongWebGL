@@ -1,6 +1,7 @@
 import * as PIXI from "pixi.js";
 import {StateStack} from "./StateStack";
 import {States} from "./StatesIdentifiers";
+import {Event} from "../Event";
 
 export namespace State {
     export interface StateConstructor {
@@ -25,6 +26,8 @@ export namespace State {
         }
 
         public abstract update(delta: number): boolean;
+
+        public abstract handleEvent(event: Event.Key): boolean;
 
         protected getApp(): PIXI.Application {
             return this.context.getApp();
