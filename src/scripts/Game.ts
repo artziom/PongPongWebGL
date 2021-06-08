@@ -44,9 +44,9 @@ export default class Game {
     }
 
     private update(delta: number) {
-        let event;
-        while (event = this.popEvent()) {
-            this.stateStack.handleEvent(event);
+        let eventKey: Event.Key | false;
+        while (eventKey = this.popEvent()) {
+            this.stateStack.handleEvent(eventKey);
         }
 
         this.stateStack.update(delta);

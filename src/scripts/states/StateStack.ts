@@ -13,10 +13,10 @@ export class StateStack {
         this.stateFactories = new Map<States.ID, () => State.AbstractState>();
     }
 
-    public handleEvent(event: Event.Key) {
+    public handleEvent(eventKey: Event.Key) {
         // Iterate from first to last, stop as soon as update() returns false
         for (let state of this.states) {
-            if (!state.handleEvent(event)) {
+            if (!state.handleEvent(eventKey)) {
                 break;
             }
         }

@@ -33,7 +33,7 @@ export class SplashScreenState extends State.AbstractState {
         return false;
     }
 
-    public handleEvent(event: Event.Key): boolean {
+    public handleEvent(eventKey: Event.Key): boolean {
         return true;
     }
 }

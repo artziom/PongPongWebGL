@@ -53,9 +53,13 @@ export class TitleState extends State.AbstractState {
         return false;
     }
 
-    public handleEvent(event: Event.Key): boolean {
-        this.requestStackPop();
-        this.requestStackPush(States.ID.Game);
+    public handleEvent(eventKey: Event.Key): boolean {
+        if(eventKey.code === "KeyS" && eventKey.type === Event.Type.KeyReleased){
+            this.requestStackPop();
+            this.requestStackPush(States.ID.Game);
+            return false;
+        }
+
         return true;
     }
 }

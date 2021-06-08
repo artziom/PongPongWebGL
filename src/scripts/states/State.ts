@@ -27,7 +27,7 @@ export namespace State {
 
         public abstract update(delta: number): boolean;
 
-        public abstract handleEvent(event: Event.Key): boolean;
+        public abstract handleEvent(eventKey: Event.Key): boolean;
 
         protected getApp(): PIXI.Application {
             return this.context.getApp();
