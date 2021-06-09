@@ -3,17 +3,45 @@ import {State} from "./State";
 import {StateStack} from "./StateStack";
 import {Event} from "../Event";
 
-export class GameState extends State.AbstractState {
-    constructor(stack: StateStack, context: State.Context) {
-        super(stack, context);
+class Entity {
+    private readonly container: PIXI.Container;
+    private name: string;
 
-        let ball = new PIXI.Graphics();
+    constructor(name: string) {
+        this.name = name;
+        this.container = new PIXI.Container();
+
+        const ball = new PIXI.Graphics();
         ball.beginFill(0xFFFFFF);
         ball.drawRect(0, 0, 10, 10);
         ball.endFill();
-        ball.position.set(this.getApp().view.width / 2 - ball.width / 2, this.getApp().view.height / 2 - ball.height / 2);
+        this.container.position.set(50, 50);
 
-        this.addChildToStage(ball);
+        this.container.addChild(ball);
+    }
+
+    public getContainer(): PIXI.Container {
+        return this.container;
+    }
+
+    public setPosition(x: number, y: number) {
+        this.container.position.set(x, y);
+    }
+
+    public getPosition() {
+        return this.container.position;
+    }
+
+}
+
+export class GameState extends State.AbstractState {
+    private ball: Entity;
+
+    constructor(stack: StateStack, context: State.Context) {
+        super(stack, context);
+
+        this.ball = new Entity("Ball");
+        this.addChildToStage(this.ball.getContainer());
     }
 
     public update(delta: number): boolean {
@@ -21,6 +49,22 @@ export class GameState extends State.AbstractState {
     }
 
     public handleEvent(eventKey: Event.Key): boolean {
+
+        if (eventKey.code == "KeyW" && eventKey.type == Event.Type.KeyPressed) {
+            this.ball.setPosition(this.ball.getPosition().x, this.ball.getPosition().y - 10);
+        }
+
+        if (eventKey.code == "KeyS" && eventKey.type == Event.Type.KeyPressed) {
+            this.ball.setPosition(this.ball.getPosition().x, this.ball.getPosition().y + 10);
+        }
+
+        if (eventKey.code == "KeyA" && eventKey.type == Event.Type.KeyPressed) {
+            this.ball.setPosition(this.ball.getPosition().x - 10, this.ball.getPosition().y);
+        }
+
+        if (eventKey.code == "KeyD" && eventKey.type == Event.Type.KeyPressed) {
+            this.ball.setPosition(this.ball.getPosition().x + 10, this.ball.getPosition().y);
+        }
         return true;
     }
 }
