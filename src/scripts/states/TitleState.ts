@@ -47,7 +47,7 @@ export class TitleState extends State.AbstractState {
     }
 
     public handleEvent(eventKey: Event.Key): boolean {
-        if (eventKey.code === "KeyS" && eventKey.type === Event.Type.KeyReleased) {
+        if (eventKey.type === Event.Type.KeyPressed) {
             this.requestStackPop();
             this.requestStackPush(States.ID.Game);
             return false;
