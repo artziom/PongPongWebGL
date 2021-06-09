@@ -7,7 +7,6 @@ import {Event} from "../Event";
 export class TitleState extends State.AbstractState {
     public gameTitle: PIXI.Text;
     public pressAnyKey: PIXI.Text;
-    public showText: boolean;
     public textEffectTime: number;
 
     constructor(stack: StateStack, context: State.Context) {
@@ -28,7 +27,6 @@ export class TitleState extends State.AbstractState {
             fill: 0xFFFFFF,
             align: "center"
         });
-        this.showText = true;
         this.textEffectTime = 0;
         this.pressAnyKey = new PIXI.Text("Press Any Key", pressAnyKeyStyle);
         this.pressAnyKey.position.set(this.getApp().screen.width / 2, this.getApp().screen.height / 2 + 100);
@@ -40,13 +38,8 @@ export class TitleState extends State.AbstractState {
         this.textEffectTime += this.getApp().ticker.elapsedMS;
 
         if (this.textEffectTime >= 1000) {
-            this.showText = !this.showText;
+            this.pressAnyKey.visible = !this.pressAnyKey.visible;
 
-            if (this.showText) {
-                this.pressAnyKey.visible = true;
-            } else {
-                this.pressAnyKey.visible = false;
-            }
             this.textEffectTime = 0;
         }
 
@@ -54,7 +47,7 @@ export class TitleState extends State.AbstractState {
     }
 
     public handleEvent(eventKey: Event.Key): boolean {
-        if(eventKey.code === "KeyS" && eventKey.type === Event.Type.KeyReleased){
+        if (eventKey.code === "KeyS" && eventKey.type === Event.Type.KeyReleased) {
             this.requestStackPop();
             this.requestStackPush(States.ID.Game);
             return false;
