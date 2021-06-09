@@ -61,6 +61,6 @@ export default class Game {
     }
 
     private popEvent(): Event.Key | false {
-        return this.events.pop() ?? false;
+        return this.events.shift() ?? false;
     }
 }
