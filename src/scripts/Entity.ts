@@ -66,6 +66,36 @@ export class Entity {
         return this.isMoving;
     }
 
+    public getNextBounds(): PIXI.Rectangle {
+        const velocity = new Vector2D(0, 0);
+        if (this.isMoving.up) {
+            velocity.y = -this.speed;
+        }
+
+        if (this.isMoving.down) {
+            velocity.y = this.speed;
+        }
+
+        if (this.isMoving.left) {
+            velocity.x = -this.speed;
+        }
+
+        if (this.isMoving.right) {
+            velocity.x = this.speed;
+        }
+
+        const rect = new PIXI.Rectangle();
+
+
+
+        rect.x = this.getPosition().x + velocity.x;
+        rect.y = this.getPosition().y + velocity.y;
+        rect.width = this.getBounds().width;
+        rect.height = this.getBounds().height;
+
+        return rect;
+    }
+
     public update(): void {
         const velocity = new Vector2D(0, 0);
         if (this.isMoving.up) {

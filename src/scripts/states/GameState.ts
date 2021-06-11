@@ -47,15 +47,12 @@ export class GameState extends State.AbstractState {
                     continue;
                 }
 
-                const a = entity.getBounds();
-                const b = secondEntity.getBounds();
-                if (this.collisionTest(a, b)) {
+                if (this.collisionTest(entity.getNextBounds(), secondEntity.getBounds())) {
                     switch (entity.getName()) {
                         case "Ball":
                             this.bounceBall(entity, secondEntity);
                             break;
                         case "Player Racket":
-                            console.log("Player Racket", a, b);
                             this.stopRacket(entity, secondEntity);
                             break;
                     }
@@ -115,11 +112,6 @@ export class GameState extends State.AbstractState {
             return;
         }
 
-        // if (entity.getMove().up) {
-        //     entity.setPosition(entity.getPosition().x, entity.getPosition().y + 2 * entity.getSpeed());
-        // } else {
-        //     entity.setPosition(entity.getPosition().x, entity.getPosition().y - 2 * entity.getSpeed());
-        // }
         entity.setMove("up", false);
         entity.setMove("down", false);
     }
