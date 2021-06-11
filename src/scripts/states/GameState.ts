@@ -18,10 +18,26 @@ class Entity {
     private readonly container: PIXI.Container;
     private name: string;
 
+    private readonly speed: number;
     private velocity: Vector2D;
 
-    constructor(name: string) {
+    private readonly isMoving: {
+        up: boolean;
+        down: boolean;
+        left: boolean;
+        right: boolean;
+    }
+
+    constructor(name: string, speed: number) {
         this.name = name;
+        this.speed = speed;
+        this.isMoving = {
+            down: false,
+            up: false,
+            left: false,
+            right: false
+        };
+
         this.container = new PIXI.Container();
 
         const ball = new PIXI.Graphics();
@@ -29,8 +45,6 @@ class Entity {
         ball.drawRect(0, 0, 10, 10);
         ball.endFill();
         this.container.position.set(50, 50);
-
-        this.velocity = new Vector2D(0, 0);
 
         this.container.addChild(ball);
     }
@@ -47,18 +61,30 @@ class Entity {
         return this.container.position;
     }
 
-    public setVelocity(velocity: Vector2D): void {
-        this.velocity = velocity;
-    }
-
-    public getVelocity(): Vector2D {
-        return this.velocity;
+    public setMove(direction: "up" | "down" | "left" | "right", isMoving: boolean) {
+        this.isMoving[direction] = isMoving;
     }
 
     public update(): void {
-        this.setPosition(this.getPosition().x + this.getVelocity().x, this.getPosition().y + this.getVelocity().y);
-    }
+        const velocity = new Vector2D(0, 0);
+        if (this.isMoving.up) {
+            velocity.y = -this.speed;
+        }
 
+        if (this.isMoving.down) {
+            velocity.y = this.speed;
+        }
+
+        if (this.isMoving.left) {
+            velocity.x = -this.speed;
+        }
+
+        if (this.isMoving.right) {
+            velocity.x = this.speed;
+        }
+
+        this.setPosition(this.getPosition().x + velocity.x, this.getPosition().y + velocity.y);
+    }
 }
 
 export class GameState extends State.AbstractState {
@@ -67,7 +93,7 @@ export class GameState extends State.AbstractState {
     constructor(stack: StateStack, context: State.Context) {
         super(stack, context);
 
-        this.ball = new Entity("Ball");
+        this.ball = new Entity("Ball", 10);
         this.addChildToStage(this.ball.getContainer());
     }
 
@@ -78,46 +104,23 @@ export class GameState extends State.AbstractState {
     }
 
     public handleEvent(eventKey: Event.Key): boolean {
-        const speed = 10;
-
         if (eventKey.type == Event.Type.KeyPressed) {
             if (eventKey.code == "KeyW") {
-                this.ball.setVelocity(new Vector2D(this.ball.getVelocity().x, -speed));
+                this.ball.setMove("up", true);
             }
 
             if (eventKey.code == "KeyS") {
-                this.ball.setVelocity(new Vector2D(this.ball.getVelocity().x, speed));
-            }
-
-            if (eventKey.code == "KeyA") {
-                this.ball.setVelocity(new Vector2D(-speed, this.ball.getVelocity().y));
-
-            }
-
-            if (eventKey.code == "KeyD") {
-                this.ball.setVelocity(new Vector2D(speed, this.ball.getVelocity().y));
-
+                this.ball.setMove("down", true);
             }
         }
 
-
         if (eventKey.type == Event.Type.KeyReleased) {
             if (eventKey.code == "KeyW") {
-                this.ball.setVelocity(new Vector2D(this.ball.getVelocity().x, 0));
+                this.ball.setMove("up", false);
             }
 
             if (eventKey.code == "KeyS") {
-                this.ball.setVelocity(new Vector2D(this.ball.getVelocity().x, 0));
-            }
-
-            if (eventKey.code == "KeyA") {
-                this.ball.setVelocity(new Vector2D(0, this.ball.getVelocity().y));
-
-            }
-
-            if (eventKey.code == "KeyD") {
-                this.ball.setVelocity(new Vector2D(0, this.ball.getVelocity().y));
-
+                this.ball.setMove("down", false);
             }
         }
 
