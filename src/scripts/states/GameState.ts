@@ -47,13 +47,16 @@ export class GameState extends State.AbstractState {
                     continue;
                 }
 
-                if (this.collisionTest(entity, secondEntity)) {
+                const a = entity.getBounds();
+                const b = secondEntity.getBounds();
+                if (this.collisionTest(a, b)) {
                     switch (entity.getName()) {
                         case "Ball":
                             this.bounceBall(entity, secondEntity);
                             break;
                         case "Player Racket":
-                            this.stopRacket(entity);
+                            console.log("Player Racket", a, b);
+                            this.stopRacket(entity, secondEntity);
                             break;
                     }
                 }
@@ -107,33 +110,24 @@ export class GameState extends State.AbstractState {
         }
     }
 
-    private stopRacket(entity: Entity) {
-        if (entity.getMove().up) {
-            entity.setPosition(entity.getPosition().x, entity.getPosition().y + entity.getSpeed());
-        } else {
-            entity.setPosition(entity.getPosition().x, entity.getPosition().y - entity.getSpeed());
+    private stopRacket(entity: Entity, secondEntity: Entity) {
+        if (secondEntity.getName() === "Ball") {
+            return;
         }
+
+        // if (entity.getMove().up) {
+        //     entity.setPosition(entity.getPosition().x, entity.getPosition().y + 2 * entity.getSpeed());
+        // } else {
+        //     entity.setPosition(entity.getPosition().x, entity.getPosition().y - 2 * entity.getSpeed());
+        // }
         entity.setMove("up", false);
         entity.setMove("down", false);
     }
 
-    private collisionTest(a: Entity, b: Entity): boolean {
-        let aX1 = a.getBounds().x;
-        let aX2 = a.getBounds().x + a.getBounds().width;
-        let bX1 = b.getBounds().x;
-        let bX2 = b.getBounds().x + b.getBounds().width;
-
-        if (aX1 < bX2 && aX2 > bX1) {
-            let aY1 = a.getBounds().y;
-            let aY2 = a.getBounds().y + a.getBounds().height;
-            let bY1 = b.getBounds().y;
-            let bY2 = b.getBounds().y + b.getBounds().height;
-
-            if (aY1 < bY2 && aY2 > bY1) {
-                return true;
-            }
-        }
-
-        return false;
+    private collisionTest(aBounds: PIXI.Rectangle, bBounds: PIXI.Rectangle): boolean {
+        return aBounds.x < bBounds.x + bBounds.width
+            && aBounds.x + aBounds.width > bBounds.x
+            && aBounds.y < bBounds.y + bBounds.height
+            && aBounds.y + aBounds.height > bBounds.y;
     }
 }
