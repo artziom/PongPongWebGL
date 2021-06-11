@@ -25,6 +25,8 @@ export class GameState extends State.AbstractState {
 
         const ballSize = new Vector2D(10, 10);
         this.ball = new Entity("Ball", 10, new Vector2D(this.getApp().view.width / 2 - ballSize.x / 2, this.getApp().view.height / 2 - ballSize.y / 2), new Vector2D(10, 10));
+        this.ball.setMove("left", true);
+        this.ball.setMove("down", true);
         this.entities.push(this.ball);
 
         const wallThick = 5;
@@ -40,6 +42,23 @@ export class GameState extends State.AbstractState {
 
     public update(delta: number): boolean {
         for (const entity of this.entities) {
+            for (const secondEntity of this.entities) {
+                if (entity.getName() === secondEntity.getName()) {
+                    continue;
+                }
+
+                if (this.collisionTest(entity, secondEntity)) {
+                    switch (entity.getName()) {
+                        case "Ball":
+                            this.bounceBall(entity, secondEntity);
+                            break;
+                        case "Player Racket":
+                            this.stopRacket(entity);
+                            break;
+                    }
+                }
+
+            }
             entity.update();
         }
 
@@ -68,5 +87,53 @@ export class GameState extends State.AbstractState {
         }
 
         return true;
+    }
+
+    private bounceBall(ball: Entity, secondEntity: Entity) {
+        const move = ball.getMove();
+        const moveUp = move.up;
+        const moveDown = move.down;
+        const moveLeft = move.left;
+        const moveRight = move.right;
+
+        const name = secondEntity.getName();
+
+        if (["Wall Top", "Wall Bottom"].includes(name)) {
+            ball.setMove("up", moveDown);
+            ball.setMove("down", moveUp);
+        } else if (["Wall Left", "Wall Right", "Player Racket", "Enemy Racket"].includes(name)) {
+            ball.setMove("left", moveRight);
+            ball.setMove("right", moveLeft);
+        }
+    }
+
+    private stopRacket(entity: Entity) {
+        if (entity.getMove().up) {
+            entity.setPosition(entity.getPosition().x, entity.getPosition().y + entity.getSpeed());
+        } else {
+            entity.setPosition(entity.getPosition().x, entity.getPosition().y - entity.getSpeed());
+        }
+        entity.setMove("up", false);
+        entity.setMove("down", false);
+    }
+
+    private collisionTest(a: Entity, b: Entity): boolean {
+        let aX1 = a.getBounds().x;
+        let aX2 = a.getBounds().x + a.getBounds().width;
+        let bX1 = b.getBounds().x;
+        let bX2 = b.getBounds().x + b.getBounds().width;
+
+        if (aX1 < bX2 && aX2 > bX1) {
+            let aY1 = a.getBounds().y;
+            let aY2 = a.getBounds().y + a.getBounds().height;
+            let bY1 = b.getBounds().y;
+            let bY2 = b.getBounds().y + b.getBounds().height;
+
+            if (aY1 < bY2 && aY2 > bY1) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

@@ -3,7 +3,7 @@ import {Vector2D} from "./utils/Vector2D";
 
 export class Entity {
     private readonly container: PIXI.Container;
-    private name: string;
+    private readonly name: string;
     private readonly speed: number;
     private readonly isMoving: {
         up: boolean;
@@ -33,6 +33,10 @@ export class Entity {
         this.container.addChild(ball);
     }
 
+    public getName():string{
+        return this.name;
+    }
+
     public getContainer(): PIXI.Container {
         return this.container;
     }
@@ -47,6 +51,19 @@ export class Entity {
 
     public setMove(direction: "up" | "down" | "left" | "right", isMoving: boolean) {
         this.isMoving[direction] = isMoving;
+    }
+
+    public getSpeed(): number{
+        return this.speed;
+    }
+
+    public getMove(): {
+        up: boolean;
+        down: boolean;
+        left: boolean;
+        right: boolean;
+    }{
+        return this.isMoving;
     }
 
     public update(): void {
@@ -68,5 +85,9 @@ export class Entity {
         }
 
         this.setPosition(this.getPosition().x + velocity.x, this.getPosition().y + velocity.y);
+    }
+
+    public getBounds(){
+        return this.container.getBounds();
     }
 }
