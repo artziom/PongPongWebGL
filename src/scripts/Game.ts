@@ -30,11 +30,11 @@ export default class Game {
 
         this.events = [];
 
-        window.onkeydown = (e) => {
+        window.onkeydown = (e: KeyboardEvent) => {
             this.events.push(new Event.Key(Event.Type.KeyPressed, e.code, false, false, false));
         };
 
-        window.onkeyup = (e) => {
+        window.onkeyup = (e: KeyboardEvent) => {
             this.events.push(new Event.Key(Event.Type.KeyReleased, e.code, false, false, false));
         };
     }
