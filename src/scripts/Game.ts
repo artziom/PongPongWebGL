@@ -57,7 +57,8 @@ export default class Game {
         this.stateStack.registerState(States.ID.Title, TitleState);
         this.stateStack.registerState(States.ID.Game, GameState);
 
-        this.stateStack.push(States.ID.SplashScreen);
+        // this.stateStack.push(States.ID.SplashScreen);
+        this.stateStack.push(States.ID.Game);
     }
 
     private popEvent(): Event.Key | false {
