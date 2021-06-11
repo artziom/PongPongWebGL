@@ -15,7 +15,7 @@ export class GameState extends State.AbstractState {
         super(stack, context);
         this.entities = new Array<Entity>();
 
-        const racketSize = new Vector2D(10, 75);
+        const racketSize = new Vector2D(10, 60);
 
         this.playerRacket = new Entity("Player Racket", 10, new Vector2D(30, this.getApp().view.height / 2 - racketSize.y / 2), racketSize);
         this.entities.push(this.playerRacket);
@@ -24,7 +24,7 @@ export class GameState extends State.AbstractState {
         this.entities.push(this.enemyRacket)
 
         const ballSize = new Vector2D(10, 10);
-        this.ball = new Entity("Ball", 10, new Vector2D(this.getApp().view.width / 2 - ballSize.x / 2, this.getApp().view.height / 2 - ballSize.y / 2), new Vector2D(10, 10));
+        this.ball = new Entity("Ball", 5, new Vector2D(this.getApp().view.width / 2 - ballSize.x / 2, this.getApp().view.height / 2 - ballSize.y / 2), new Vector2D(10, 10));
         this.ball.setMove("left", true);
         this.ball.setMove("down", true);
         this.entities.push(this.ball);
