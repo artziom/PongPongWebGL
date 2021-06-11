@@ -12,7 +12,7 @@ export class Entity {
         right: boolean;
     }
 
-    constructor(name: string, speed: number) {
+    constructor(name: string, speed: number, position: Vector2D, size: Vector2D) {
         this.name = name;
         this.speed = speed;
         this.isMoving = {
@@ -26,9 +26,9 @@ export class Entity {
 
         const ball = new PIXI.Graphics();
         ball.beginFill(0xFFFFFF);
-        ball.drawRect(0, 0, 10, 10);
+        ball.drawRect(0, 0, size.x, size.y);
         ball.endFill();
-        this.container.position.set(50, 50);
+        this.container.position.set(position.x, position.y);
 
         this.container.addChild(ball);
     }
