@@ -38,7 +38,7 @@ export class GameState extends State.AbstractState {
         this.entities.push(this.enemyRacket)
 
         const ballSize = new Vector2D(10, 10);
-        this.ball = new Entity("Ball", 5, new Vector2D(this.getApp().view.width / 2 - ballSize.x / 2, this.getApp().view.height / 2 - ballSize.y / 2), new Vector2D(10, 10));
+        this.ball = new Entity("Ball", 5 * 1.3, new Vector2D(this.getApp().view.width / 2 - ballSize.x / 2, this.getApp().view.height / 2 - ballSize.y / 2), new Vector2D(10, 10));
         this.ball.setMove("left", true);
         this.ball.setMove("down", true);
         this.entities.push(this.ball);
@@ -111,7 +111,7 @@ export class GameState extends State.AbstractState {
     }
 
     private followBall(entity: Entity, ball: Entity): void {
-        if (!(ball.getMove().right && ball.getPosition().x > this.getApp().view.width / 2)) {
+        if (!(ball.getMove().right)){
             entity.setMove("down", false);
             entity.setMove("up", false);
             return;
