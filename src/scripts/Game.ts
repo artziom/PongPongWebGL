@@ -61,8 +61,7 @@ export default class Game {
         this.stateStack.registerState(States.ID.GameOver, GameOverState);
         this.stateStack.registerState(States.ID.Win, WinState);
 
-        // this.stateStack.push(States.ID.SplashScreen);
-        this.stateStack.push(States.ID.Game);
+        this.stateStack.push(States.ID.SplashScreen);
     }
 
     private popEvent(): Event.Key | false {
