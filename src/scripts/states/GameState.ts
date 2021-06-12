@@ -32,9 +32,9 @@ export class GameState extends State.AbstractState {
         this.addChildToStage(this.scoreBoard);
 
         const racketSize = new Vector2D(10, 60);
-        this.playerRacket = new Entity("Player Racket", 10, new Vector2D(30, this.getApp().view.height / 2 - racketSize.y / 2), racketSize);
+        this.playerRacket = new Entity("Player Racket", 5, new Vector2D(30, this.getApp().view.height / 2 - racketSize.y / 2), racketSize);
         this.entities.push(this.playerRacket);
-        this.enemyRacket = new Entity("Enemy Racket", 10, new Vector2D(this.getApp().view.width - 30 - racketSize.x, this.getApp().view.height / 2 - racketSize.y / 2), racketSize);
+        this.enemyRacket = new Entity("Enemy Racket", 5, new Vector2D(this.getApp().view.width - 30 - racketSize.x, this.getApp().view.height / 2 - racketSize.y / 2), racketSize);
         this.entities.push(this.enemyRacket)
 
         const ballSize = new Vector2D(10, 10);
@@ -61,12 +61,17 @@ export class GameState extends State.AbstractState {
                     continue;
                 }
 
+                if (entity.getName() === "Enemy Racket" && secondEntity.getName() === "Ball") {
+                    this.followBall(entity, secondEntity);
+                }
+
                 if (this.collisionTest(entity.getNextBounds(), secondEntity.getBounds())) {
                     switch (entity.getName()) {
                         case "Ball":
                             this.bounceBall(entity, secondEntity);
                             break;
                         case "Player Racket":
+                        case "Enemy Racket":
                             this.stopRacket(entity, secondEntity);
                             break;
                     }
@@ -103,6 +108,22 @@ export class GameState extends State.AbstractState {
         }
 
         return true;
+    }
+
+    private followBall(entity: Entity, ball: Entity): void {
+        if (!(ball.getMove().right && ball.getPosition().x > this.getApp().view.width / 2)) {
+            entity.setMove("down", false);
+            entity.setMove("up", false);
+            return;
+        }
+
+        if (entity.getPosition().y > ball.getPosition().y) {
+            entity.setMove("down", false);
+            entity.setMove("up", true);
+        } else {
+            entity.setMove("down", true);
+            entity.setMove("up", false);
+        }
     }
 
     private checkScores(): void {
