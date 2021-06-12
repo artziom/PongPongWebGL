@@ -4,22 +4,36 @@ import {StateStack} from "./StateStack";
 import {Event} from "../Event";
 import {Entity} from "../Entity";
 import {Vector2D} from "../utils/Vector2D";
+import {States} from "./StatesIdentifiers";
 
 export class GameState extends State.AbstractState {
     private readonly entities: Array<Entity>;
     private readonly playerRacket: Entity;
     private readonly ball: Entity;
     private readonly enemyRacket: Entity;
+    private readonly scores: {
+        player: number,
+        enemy: number
+    }
+
+    private readonly scoreBoard: PIXI.Text;
 
     constructor(stack: StateStack, context: State.Context) {
         super(stack, context);
         this.entities = new Array<Entity>();
+        this.scores = {player: 0, enemy: 0};
+
+        const style = new PIXI.TextStyle({
+            fill: 0xFFFFFF
+        });
+        this.scoreBoard = new PIXI.Text(``, style);
+        this.scoreBoard.anchor.set(0.5);
+        this.scoreBoard.position.set(this.getApp().view.width / 2, 20);
+        this.addChildToStage(this.scoreBoard);
 
         const racketSize = new Vector2D(10, 60);
-
         this.playerRacket = new Entity("Player Racket", 10, new Vector2D(30, this.getApp().view.height / 2 - racketSize.y / 2), racketSize);
         this.entities.push(this.playerRacket);
-
         this.enemyRacket = new Entity("Enemy Racket", 10, new Vector2D(this.getApp().view.width - 30 - racketSize.x, this.getApp().view.height / 2 - racketSize.y / 2), racketSize);
         this.entities.push(this.enemyRacket)
 
@@ -62,6 +76,8 @@ export class GameState extends State.AbstractState {
             entity.update();
         }
 
+        this.checkScores();
+
         return true;
     }
 
@@ -89,6 +105,18 @@ export class GameState extends State.AbstractState {
         return true;
     }
 
+    private checkScores(): void {
+        this.scoreBoard.text = `${this.scores.player} : ${this.scores.enemy}`;
+
+        if (this.scores.player + this.scores.enemy >= 5 && this.scores.player > this.scores.enemy) {
+            this.requestStackPop();
+            this.requestStackPush(States.ID.Win);
+        } else if (this.scores.player + this.scores.enemy >= 5 && this.scores.player < this.scores.enemy) {
+            this.requestStackPop();
+            this.requestStackPush(States.ID.GameOver);
+        }
+    }
+
     private bounceBall(ball: Entity, secondEntity: Entity) {
         const move = ball.getMove();
         const moveUp = move.up;
@@ -101,9 +129,17 @@ export class GameState extends State.AbstractState {
         if (["Wall Top", "Wall Bottom"].includes(name)) {
             ball.setMove("up", moveDown);
             ball.setMove("down", moveUp);
-        } else if (["Wall Left", "Wall Right", "Player Racket", "Enemy Racket"].includes(name)) {
+        } else if (["Player Racket", "Enemy Racket", "Wall Left", "Wall Right"].includes(name)) {
             ball.setMove("left", moveRight);
             ball.setMove("right", moveLeft);
+        }
+
+        if ("Wall Left" === name) {
+            this.scores.enemy++;
+            this.ball.resetPosition();
+        } else if ("Wall Right" === name) {
+            this.scores.player++;
+            this.ball.resetPosition();
         }
     }
 

@@ -12,6 +12,8 @@ export class Entity {
         right: boolean;
     }
 
+    private readonly startPosition: Vector2D;
+
     constructor(name: string, speed: number, position: Vector2D, size: Vector2D) {
         this.name = name;
         this.speed = speed;
@@ -29,7 +31,7 @@ export class Entity {
         ball.drawRect(0, 0, size.x, size.y);
         ball.endFill();
         this.container.position.set(position.x, position.y);
-
+        this.startPosition = position;
         this.container.addChild(ball);
     }
 
@@ -53,8 +55,8 @@ export class Entity {
         this.isMoving[direction] = isMoving;
     }
 
-    public getSpeed(): number{
-        return this.speed;
+    public resetPosition(): void{
+        this.setPosition(this.startPosition.x, this.startPosition.y);
     }
 
     public getMove(): {

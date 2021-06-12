@@ -6,6 +6,8 @@ import {GameState} from "./states/GameState";
 import {States} from "./states/StatesIdentifiers";
 import {StateStack} from "./states/StateStack";
 import {Event} from "./Event";
+import {WinState} from "./states/WinState";
+import {GameOverState} from "./states/GameOverState";
 
 export default class Game {
     private readonly title: string;
@@ -56,6 +58,8 @@ export default class Game {
         this.stateStack.registerState(States.ID.SplashScreen, SplashScreenState);
         this.stateStack.registerState(States.ID.Title, TitleState);
         this.stateStack.registerState(States.ID.Game, GameState);
+        this.stateStack.registerState(States.ID.GameOver, GameOverState);
+        this.stateStack.registerState(States.ID.Win, WinState);
 
         // this.stateStack.push(States.ID.SplashScreen);
         this.stateStack.push(States.ID.Game);
